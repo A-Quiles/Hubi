@@ -1,0 +1,62 @@
+<div class="relative w-screen h-screen">
+  <!-- Video de fondo -->
+  <video
+    autoplay
+    loop
+    muted
+    playsinline
+    class="absolute top-0 left-0 w-full h-full object-cover z-0 brightness-50"
+  >
+    <source src="../../../assets/videos/fondo.mp4" type="video/mp4" />
+    Tu navegador no soporta videos HTML5.
+  </video>
+
+  <!-- Overlay oscuro -->
+  <div
+    class="absolute top-0 left-0 w-full h-full bg-black opacity-70 z-5"
+  ></div>
+
+  <!-- Contenido principal -->
+  <div class="relative flex flex-col items-center z-10">
+    <!-- SECCIÓN PUBLICAR -->
+    <div class="w-full max-w-2xl bg-gray-800 text-white p-4 mt-4 rounded">
+      <textarea
+        [(ngModel)]="tweetText"
+        class="w-full p-2 bg-gray-700 text-white rounded"
+        rows="3"
+        [attr.maxlength]="maxCharacters"
+        placeholder="¿Qué está pasando?"
+      ></textarea>
+
+      <div class="flex justify-between items-center mt-2">
+        <!-- Contador de caracteres en tiempo real -->
+        <span class="text-gray-400 text-sm">
+          {{ tweetText.length }}/{{ maxCharacters }}
+        </span>
+
+        <!-- Botón de publicar -->
+        <button
+          (click)="publicar()"
+          class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded"
+          [disabled]="tweetText.length > maxCharacters"
+        >
+          Publicar
+        </button>
+      </div>
+    </div>
+
+    <!-- SECCIÓN LISTAR PUBLICACIONES -->
+    <div class="w-full max-w-2xl bg-gray-800 text-white p-4 mt-4 rounded">
+      <h2 class="text-xl mb-4">Publicaciones</h2>
+      <div
+        *ngFor="let publicacion of publicaciones"
+        class="mb-4 p-2 bg-gray-700 rounded"
+      >
+        <p class="mb-1">{{ publicacion.mensaje }}</p>
+        <small class="text-gray-400">{{
+          calcularTiempoTranscurrido(publicacion.fecha)
+        }}</small>
+      </div>
+    </div>
+  </div>
+</div>
