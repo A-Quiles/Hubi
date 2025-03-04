@@ -1,7 +1,16 @@
-@import 'ngx-toastr/toastr';
-@import url('https://fonts.googleapis.com/css2?family=Raleway&family=Signika+Negative:wght@500&display=swap');
-
+@import "ngx-toastr/toastr";
+@import url("https://fonts.googleapis.com/css2?family=Raleway&family=Signika+Negative:wght@500&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  font-family: "Exo 2", sans-serif; /* Para todo el contenido */
+}
+
+h1,
+h2,
+button {
+  font-family: "Audiowide", sans-serif; /* Para destacar títulos y botones */
+}

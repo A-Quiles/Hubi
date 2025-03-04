@@ -1,61 +1,125 @@
-<div class="relative w-screen h-screen">
+<div class="relative">
   <!-- Video de fondo -->
   <video
     autoplay
     loop
     muted
     playsinline
-    class="absolute top-0 left-0 w-full h-full object-cover z-0 brightness-50"
+    class="fixed top-0 left-0 w-full h-full object-cover z-0 brightness-50"
   >
     <source src="../../../assets/videos/fondo.mp4" type="video/mp4" />
     Tu navegador no soporta videos HTML5.
   </video>
 
   <!-- Overlay oscuro -->
-  <div
-    class="absolute top-0 left-0 w-full h-full bg-black opacity-70 z-5"
-  ></div>
+  <div class="fixed top-0 left-0 w-full h-full bg-black opacity-70 z-5"></div>
 
   <!-- Contenido principal -->
-  <div class="relative flex flex-col items-center z-10">
-    <!-- SECCIÓN PUBLICAR -->
-    <div class="w-full max-w-2xl bg-gray-800 text-white p-4 mt-4 rounded">
+  <div class="relative flex flex-col items-center z-10 min-h-screen pb-8">
+    <!-- Sección Publicar -->
+    <div
+      class="w-full max-w-2xl bg-gray-800 text-white p-4 mt-4 rounded-md backdrop-blur-lg bg-opacity-10 border border-gray-300"
+    >
+      <input
+        type="text"
+        [(ngModel)]="nombre"
+        placeholder="Ingresa tu nombre"
+        class="w-full p-2 bg-gray-600 text-white mb-2 rounded-md backdrop-blur-lg bg-opacity-10"
+      />
+
       <textarea
         [(ngModel)]="tweetText"
-        class="w-full p-2 bg-gray-700 text-white rounded"
+        class="w-full p-2 bg-gray-600 text-white mb-2 rounded-md backdrop-blur-lg bg-opacity-10"
         rows="3"
         [attr.maxlength]="maxCharacters"
-        placeholder="¿Qué está pasando?"
+        placeholder="¿Qué estás pensando?"
       ></textarea>
 
+      <select
+        [(ngModel)]="selectedCategoria"
+        class="w-full p-2 bg-gray-600 text-white mb-2 rounded-md backdrop-blur-lg bg-opacity-10"
+      >
+        <option value="" disabled [ngValue]="null">
+          Selecciona una categoría
+        </option>
+        <option *ngFor="let categoria of categorias" [ngValue]="categoria">
+          {{ categoria.nombre }}
+        </option>
+      </select>
+
+      <!-- Campo para subir imagen (opcional) -->
+      <input
+        type="file"
+        (change)="onFileSelected($event)"
+        accept="image/*"
+        class="w-full p-2 bg-gray-800 text-white mt-2 rounded-md backdrop-blur-lg bg-opacity-10"
+      />
+
       <div class="flex justify-between items-center mt-2">
-        <!-- Contador de caracteres en tiempo real -->
         <span class="text-gray-400 text-sm">
           {{ tweetText.length }}/{{ maxCharacters }}
         </span>
-
-        <!-- Botón de publicar -->
         <button
           (click)="publicar()"
-          class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded"
-          [disabled]="tweetText.length > maxCharacters"
+          class="px-4 py-2 border border-gray-300 rounded-md bg-opacity-10"
+          [disabled]="
+            tweetText.length > maxCharacters ||
+            !selectedCategoria ||
+            !nombre.trim()
+          "
         >
           Publicar
         </button>
       </div>
     </div>
 
-    <!-- SECCIÓN LISTAR PUBLICACIONES -->
-    <div class="w-full max-w-2xl bg-gray-800 text-white p-4 mt-4 rounded">
-      <h2 class="text-xl mb-4">Publicaciones</h2>
+    <!-- Sección Listar Publicaciones -->
+    <div
+      class="w-full max-w-2xl bg-gray-800 text-white p-4 mt-4 rounded-md backdrop-blur-lg bg-opacity-10 border border-gray-300"
+    >
+      <h2 class="text-3xl mb-10 mt-5 text-center">{{ categoriaFiltrada }}</h2>
+
+      <div class="mb-4 flex items-center">
+        <select
+          [(ngModel)]="selectedFilterCategoria"
+          class="p-2 bg-black text-white rounded-md backdrop-blur-lg bg-opacity-10 border border-gray-300"
+        >
+          <option [ngValue]="null">Todas las categorías</option>
+          <option *ngFor="let categoria of categorias" [ngValue]="categoria.id">
+            {{ categoria.nombre }}
+          </option>
+        </select>
+        <button
+          (click)="filtrarPublicaciones()"
+          class="ml-2 px-4 py-2 rounded-md backdrop-blur-lg bg-opacity-10 border border-gray-300"
+        >
+          Filtrar
+        </button>
+      </div>
+
       <div
         *ngFor="let publicacion of publicaciones"
-        class="mb-4 p-2 bg-gray-700 rounded"
+        class="mb-4 p-2 bg-gray-600 rounded-md backdrop-blur-3xl bg-opacity-10"
       >
-        <p class="mb-1">{{ publicacion.mensaje }}</p>
-        <small class="text-gray-400">{{
-          calcularTiempoTranscurrido(publicacion.fecha)
-        }}</small>
+        <h2 class="mb-2">
+          {{ publicacion.nombre }}
+          <span class="text-gray-400" *ngIf="publicacion.categoria">
+            {{ publicacion.categoria.nombre }}
+          </span>
+        </h2>
+        <p class="mb-4">{{ publicacion.mensaje }}</p>
+
+        <!-- Si existe imagen, se muestra una vista previa -->
+        <div *ngIf="publicacion.imagen">
+          <img
+            [src]="'data:image/jpeg;base64,' + publicacion.imagen"
+            alt="Imagen de la publicación"
+            class="mt-2 max-w-full h-auto"
+          />
+        </div>
+        <small class="text-gray-400">
+          {{ calcularTiempoTranscurrido(publicacion.fecha) }}
+        </small>
       </div>
     </div>
   </div>

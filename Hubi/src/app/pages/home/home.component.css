@@ -1,0 +1,5 @@
+/* Estilo para las opciones desplegadas */
+select option {
+  background-color: #121212; /* Fondo negro */
+  color: white; /* Texto blanco */
+}

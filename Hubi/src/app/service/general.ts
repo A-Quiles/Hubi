@@ -12,10 +12,5 @@ export class General{
 
   constructor(private httpClient: HttpClient) { }
 
-  createUser(data: any) {
-    return this.httpClient.post(this.url, data);
-  }
-  loginUser(data: any) {
-    return this.httpClient.post(this.urlLogin, data);
-  }
+
 }
