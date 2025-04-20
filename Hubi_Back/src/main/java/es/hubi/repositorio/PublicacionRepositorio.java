@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import es.hubi.modelo.Publicacion;
 
-public interface PublicacionRepositorio extends JpaRepository<Publicacion, Long> {
+public interface PublicacionRepositorio extends JpaRepository<Publicacion, Long>, PublicacionRepositorioCustom {
 
 	 @Query("SELECT p FROM Publicacion p ORDER BY p.fecha DESC LIMIT 500")
 	 List<Publicacion> findTop500ByOrderByFechaDesc();

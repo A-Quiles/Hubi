@@ -18,7 +18,6 @@ public class PublicacionControlador {
     @Autowired
     private PublicacionServicio publicacionServicio;
 
-    // Crear una nueva publicación con imagen
     @PostMapping
     public ResponseEntity<Publicacion> crearPublicacion(
             @RequestParam("mensaje") String mensaje,
@@ -38,15 +37,18 @@ public class PublicacionControlador {
         return ResponseEntity.ok(nuevaPublicacion);
     }
 
-    // Obtener una publicación por ID (incluyendo la imagen si existe)
     @GetMapping("/{id}")
     public ResponseEntity<Publicacion> obtenerPublicacionPorId(@PathVariable Long id) {
         return ResponseEntity.ok(publicacionServicio.obtenerPublicacionPorId(id));
     }
 
-    // Listar todas las publicaciones
+    // Aquí añado el parámetro List<String> hashtags
     @GetMapping
-    public ResponseEntity<List<Publicacion>> listarPublicaciones(@RequestParam(required = false) Long categoria) {
-        return ResponseEntity.ok(publicacionServicio.listarPublicaciones(categoria));
+    public ResponseEntity<List<Publicacion>> listarPublicaciones(
+        @RequestParam(value = "categoriaId", required = false) Long categoriaId,
+        @RequestParam(value = "hashtag",     required = false) List<String> hashtags
+    ) {
+        List<Publicacion> resultado = publicacionServicio.listarPublicaciones(categoriaId, hashtags);
+        return ResponseEntity.ok(resultado);
     }
 }

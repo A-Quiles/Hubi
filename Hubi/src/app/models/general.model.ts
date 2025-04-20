@@ -9,6 +9,8 @@ export interface Publicacion {
   mensaje: string;
   fecha: string;
   categoria?: Categoria;
-  nombre: string; 
+  nombre: string;
   imagen?: string;
+  hashtags?: string[];
 }
+

@@ -21,13 +21,16 @@ public class Publicacion {
     @Column(name = "NOMBRE", nullable = false)
     private String nombre;
 
+    @Column(name = "HASHTAGS") // ← Campo para almacenar hashtags extraídos
+    private String hashtags;
+
     @ManyToOne
     @JoinColumn(name = "ID_CATEGORIA", referencedColumnName = "ID")
     private Categoria categoria;
 
     @Lob
     @Column(name = "IMAGEN", columnDefinition = "LONGBLOB")
-    private byte[] imagen; // Nuevo campo para la imagen
+    private byte[] imagen;
 
     // Getters y Setters
     public Long getId() { return id; }
@@ -41,6 +44,9 @@ public class Publicacion {
 
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }
+
+    public String getHashtags() { return hashtags; }
+    public void setHashtags(String hashtags) { this.hashtags = hashtags; }
 
     public Categoria getCategoria() { return categoria; }
     public void setCategoria(Categoria categoria) { this.categoria = categoria; }

@@ -16,6 +16,16 @@
 
   <!-- Contenido principal -->
   <div class="relative flex flex-col items-center z-10 min-h-screen pb-8">
+    <!-- Encabezado con logo y nombre de la aplicación -->
+    <div class="flex items-center justify-center mt-6">
+      <img
+        src="../../../assets/image/Hubi.png"
+        alt="Logo"
+        class="h-20 w-20 mr-3"
+      />
+      <h1 class="text-5xl font-bold text-white">HUBI</h1>
+    </div>
+
     <!-- Sección Publicar -->
     <div
       class="w-full max-w-2xl bg-gray-800 text-white p-4 mt-4 rounded-md backdrop-blur-lg bg-opacity-10 border border-gray-300"
@@ -27,17 +37,28 @@
         class="w-full p-2 bg-gray-600 text-white mb-2 rounded-md backdrop-blur-lg bg-opacity-10"
       />
 
-      <textarea
-        [(ngModel)]="tweetText"
-        class="w-full p-2 bg-gray-600 text-white mb-2 rounded-md backdrop-blur-lg bg-opacity-10"
-        rows="3"
-        [attr.maxlength]="maxCharacters"
-        placeholder="¿Qué estás pensando?"
-      ></textarea>
+      <!-- Contenedor relativo para overlay y textarea -->
+      <div class="relative">
+        <!-- Capa inferior que muestra el texto con hashtags resaltados -->
+        <div
+          class="absolute top-0 left-0 w-full p-2 pointer-events-none whitespace-pre-wrap break-words text-white"
+          [innerHTML]="tweetText | hashtags"
+          style="z-index: 1"
+        ></div>
+
+        <!-- Textarea transparente donde escribe el usuario -->
+        <textarea
+          [(ngModel)]="tweetText"
+          rows="3"
+          [attr.maxlength]="maxCharacters"
+          placeholder="¿Qué estás pensando?"
+          class="relative z-10 w-full p-2 text-transparent bg-gray-600 caret-white rounded-md backdrop-blur-lg bg-opacity-10 whitespace-pre-wrap break-words"
+        ></textarea>
+      </div>
 
       <select
         [(ngModel)]="selectedCategoria"
-        class="w-full p-2 bg-gray-600 text-white mb-2 rounded-md backdrop-blur-lg bg-opacity-10"
+        class="w-full p-2 bg-gray-600 text-white mb-2 mt-2 rounded-md backdrop-blur-lg bg-opacity-10"
       >
         <option value="" disabled [ngValue]="null">
           Selecciona una categoría
@@ -47,7 +68,7 @@
         </option>
       </select>
 
-      <!-- Campo para subir imagen (opcional) -->
+      <!-- Campo para subir imagen -->
       <input
         type="file"
         (change)="onFileSelected($event)"
@@ -77,9 +98,10 @@
     <div
       class="w-full max-w-2xl bg-gray-800 text-white p-4 mt-4 rounded-md backdrop-blur-lg bg-opacity-10 border border-gray-300"
     >
-      <h2 class="text-3xl mb-10 mt-5 text-center">{{ categoriaFiltrada }}</h2>
+      <h2 class="text-3xl mb-10 mt-5 text-center">Publicaciones</h2>
 
       <div class="mb-4 flex items-center">
+        <!-- Filtro por categoría -->
         <select
           [(ngModel)]="selectedFilterCategoria"
           class="p-2 bg-black text-white rounded-md backdrop-blur-lg bg-opacity-10 border border-gray-300"
@@ -89,6 +111,14 @@
             {{ categoria.nombre }}
           </option>
         </select>
+
+        <input
+          type="text"
+          [(ngModel)]="hashtagFilter"
+          placeholder="#hashtag"
+          class="p-2 ml-2 bg-black text-white rounded-md backdrop-blur-lg bg-opacity-10 border border-gray-300"
+        />
+
         <button
           (click)="filtrarPublicaciones()"
           class="ml-2 px-4 py-2 rounded-md backdrop-blur-lg bg-opacity-10 border border-gray-300"
@@ -107,14 +137,16 @@
             {{ publicacion.categoria.nombre }}
           </span>
         </h2>
-        <p class="mb-4">{{ publicacion.mensaje }}</p>
 
-        <!-- Si existe imagen, se muestra una vista previa -->
+        <!-- Se utiliza el pipe para destacar los hashtags en el mensaje -->
+        <p class="mb-4" [innerHTML]="publicacion.mensaje | hashtags"></p>
+
+        <!-- Imagen de la publicación -->
         <div *ngIf="publicacion.imagen">
           <img
             [src]="'data:image/jpeg;base64,' + publicacion.imagen"
             alt="Imagen de la publicación"
-            class="mt-2 max-w-full h-auto"
+            class="mt-2 max-w-full h-auto rounded-md"
           />
         </div>
         <small class="text-gray-400">
